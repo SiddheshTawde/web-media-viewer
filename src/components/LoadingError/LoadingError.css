@@ -1,0 +1,31 @@
+.error-container {
+	width: 600px;
+	height: 400px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	background-color: #bdbdbd99;
+	backdrop-filter: blur(2px);
+}
+
+.error-container h3,
+h5 {
+	margin: 0;
+}
+
+.error-thumbnail-container {
+	width: 100px;
+	height: 100px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	border: 1px solid #bdbdbd;
+	border-radius: 12px;
+}
+
+.error-thumbnail-container h5 {
+	margin: 0;
+	text-align: center;
+}
