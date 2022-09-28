@@ -1,7 +1,7 @@
-import { CSSProperties } from "react";
+import { CSSProperties, PropsWithChildren } from "react";
 import Item from "./Item"
 
-export interface MediaViewerProps {
+export interface MediaViewerProps extends PropsWithChildren {
     items: Item[];
     theme?: 'dark' | 'light' | 'transparent';
     hideControls?: boolean;

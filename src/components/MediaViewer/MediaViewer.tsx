@@ -1,184 +1,142 @@
-import React, { Fragment } from "react"
-import { useSprings, useTrail, animated } from "@react-spring/web"
+import React, { FunctionComponent, useRef, useState } from 'react'
 import useMeasure from "react-use-measure"
 import { useDrag } from "@use-gesture/react"
 import clamp from "lodash.clamp"
+import { useSprings, useTrail, animated } from "@react-spring/web"
 import { TiArrowLeftThick, TiArrowRightThick, TiTimes } from "react-icons/ti"
-import { MediaViewerProps } from "../../types/MediaViewer"
-import DeviceDetect from "../../../utils/detect-device"
-import getMIMEType from "../../../utils/get-mime-type"
-import Item from "../../types/Item"
+
 // @ts-ignore - dompurify does not includes type definitions
 import DOMPurify from "dompurify"
-import LoadingError from "../LoadingError/LoadingError"
 
-import "./MediaViewer.css"
-import Spinner from "../Spinner/Spinner"
-import ThumbnailError from "../LoadingError/ThumbnailError"
+import DeviceDetect from '../../../utils/detect-device'
+import { MediaViewerProps } from '../../types/MediaViewer'
+import ItemComponent from '../Item/Item'
+import Thumbnail from '../Item/Thumbnail'
 
-const MediaViewer: React.FunctionComponent<MediaViewerProps> = ({ items, theme = "light", hideControls, titleStyles, swipeDistance, galleryName = "", spinnerSize }) => {
-  const isMobile = DeviceDetect();
+import './MediaViewer.css'
 
-  const [isLoading, toggleLoading] = React.useState(true);
+const MediaViewer: FunctionComponent<MediaViewerProps> = ({ items = [], theme = 'light', hideControls = false, spinnerSize = 48, swipeDistance, titleStyles, galleryName = '' }) => {
+	const isMobile = DeviceDetect();
+	const modalref = useRef<HTMLDivElement>(null);
+	const [container, { height, width }] = useMeasure();
 
-  const [itemList, updateItemList] = React.useState<Item[]>([]);
-  const [index, updateIndex] = React.useState(0);
+	const [openOverlay, toggleOverlay] = useState(false);
+	const trail = useTrail(items.length, {
+		opacity: openOverlay ? 1 : 0,
+		x: openOverlay ? 0 : -200,
+		from: { opacity: 0, x: -200 },
+	});
 
-  const [container, { height, width }] = useMeasure();
-  const [props, api] = useSprings(itemList.length, i => ({ x: i * width, scale: width === 0 ? 0 : 1, display: "flex" }), [width])
+	const handleJumpToSlide = (index: number) => {
+		updateIndex(index);
 
-  const [open, toggle] = React.useState(false);
-  const trail = useTrail(itemList.length, {
-    opacity: open ? 1 : 0,
-    x: open ? 0 : -200,
-    from: { opacity: 0, x: -200 },
-  });
+		api.start(i => {
+			if (i < index - 1 || i > index + 1) return { display: "none" }
+			const x = (i - index) * width
+			const scale = 1
+			return { x, scale, display: "flex" }
+		});
 
-  const handleSwipeGesture = useDrag(({ active, movement: [mx], direction: [xDir], distance, cancel }) => {
-    if (active && distance[0] > (swipeDistance || width / 2)) {
-      updateIndex(clamp(index + (xDir > 0 ? -1 : 1), 0, itemList.length - 1))
-      cancel()
-    }
-    api.start(i => {
-      if (i < index - 1 || i > index + 1) return { display: "none" }
-      const x = (i - index) * width + (active ? mx : 0)
-      const scale = active ? 1 - distance[0] / width / 2 : 1
-      return { x, scale, display: "flex" }
-    })
-  });
+		toggleOverlay(false);
+	};
 
-  const handleNavigation = (index: number) => {
-    updateIndex(index);
+	const [index, updateIndex] = useState(0);
+	const [props, api] = useSprings(items.length, i => ({ x: i * width, scale: width === 0 ? 0 : 1, display: "flex" }), [width])
 
-    api.start(i => {
-      if (i < index - 1 || i > index + 1) return { display: "none" }
-      const x = (i - index) * width
-      const scale = 1
-      return { x, scale, display: "flex" }
-    })
-  };
+	const handleSwipeGesture = useDrag(({ active, movement: [mx], direction: [xDir], distance, cancel }) => {
+		if (active && distance[0] > (swipeDistance || width / 2)) {
+			updateIndex(clamp(index + (xDir > 0 ? -1 : 1), 0, items.length - 1))
+			cancel()
+		}
+		api.start(i => {
+			if (i < index - 1 || i > index + 1) return { display: "none" }
+			const x = (i - index) * width + (active ? mx : 0)
+			const scale = active ? 1 - distance[0] / width / 2 : 1
+			return { x, scale, display: "flex" }
+		})
+	});
 
-  const handleJumpToSlide = (index: number) => {
-    updateIndex(index);
+	const handleNavigation = (index: number) => {
+		updateIndex(index);
 
-    api.start(i => {
-      if (i < index - 1 || i > index + 1) return { display: "none" }
-      const x = (i - index) * width
-      const scale = 1
-      return { x, scale, display: "flex" }
-    });
+		api.start((i: number) => {
+			if (i < index - 1 || i > index + 1) return { display: "none" }
+			const x = (i - index) * width
+			const scale = 1
+			return { x, scale, display: "flex" }
+		})
+	};
 
-    toggle(false);
-  };
+	const handleModalOpen = () => {
+		toggleOverlay(true);
+		modalref.current?.classList.add("fold-in");
+	};
 
-  const parseInput = async () => {
-    const updatedItems: Item[] = [];
+	const handleModalClose = () => {
+		toggleOverlay(false);
+		modalref.current?.classList.add("fold-out");
 
-    for (let i = 0; i < items.length; i++) {
-      const extended_item = { ...items[i] };
-      const type = await getMIMEType(extended_item.url);
+		setTimeout(() => {
+			modalref.current?.classList.remove("fold-in");
+			modalref.current?.classList.remove("fold-out");
+		}, 1000);
+	};
 
-      if (type === 'text') {
-        extended_item["hasError"] = true;
-      } else {
-        extended_item["type"] = type;
-        extended_item["hasError"] = false;
-      }
+	return (
+		<main ref={container} className={`media-viewer__container media-viewer__container-background--${theme}`}>
 
-      updatedItems.push(extended_item);
-    }
+			{/* Navigation controls -- Start */}
+			{index === 0 || isMobile || hideControls ? null :
+				<button className="media-viewer__nav-button media-viewer__left-nav" disabled={index === 0} onClick={() => handleNavigation(index - 1)}>
+					<TiArrowLeftThick fontSize={24} color={"#FFFFFF"} />
+				</button>
+			}
 
-    return updatedItems;
-  }
+			{index === items.length - 1 || isMobile || hideControls ? null :
+				<button className="media-viewer__nav-button media-viewer__right-nav" disabled={index === items.length - 1} onClick={() => handleNavigation(index + 1)}>
+					<TiArrowRightThick fontSize={24} color={"#FFFFFF"} />
+				</button>
+			}
+			{/* Navigation controls -- End */}
 
-  React.useEffect(() => {
+			{/* Main Items - Start */}
+			{props.map(({ x, display, scale }, i) =>
+				<animated.div key={`item-${i + 1}`} className="media-viewer__item" {...handleSwipeGesture()} style={{ display, x, scale }}>
+					<ItemComponent item={items[i]} currentIndex={index} width={width} height={height} spinnerSize={spinnerSize} titleStyles={titleStyles} />
+				</animated.div>
+			)}
+			{/* Main Items - End */}
 
-    parseInput()
-      .then((updatedItems) => {
-        console.log({ updatedItems })
+			{/* Jump-to-Image Section - Start */}
+			<button className={`media-viewer__overlay-trigger ${openOverlay ? 'hidden' : ''}`} onClick={handleModalOpen}>
+				{items.length === 0 ? "- / -" : (index + 1) + " / " + items.length}
+			</button>
 
-        toggleLoading(false);
-        updateItemList(updatedItems);
+			<div ref={modalref} className="media-viewer__modal-container">
+				<header className='media-viewer__modal-header'>
+					<h3 style={{ margin: 0, color: "#FFFFFF" }}>{galleryName}</h3>
+					<TiTimes fontSize={24} color={"#FFFFFF"} style={{ cursor: "pointer" }} onClick={handleModalClose} />
+				</header>
 
-      })
-      .catch(error => {
-        console.log(error);
-      })
-  }, []);
+				<div className="media-viewer__modal-thumbnail-container">
+					{trail.map(({ opacity, x }, i) =>
+						<animated.div key={i} className="media-viewer__modal-thumbnail" style={{ opacity, x }} onClick={() => { handleJumpToSlide(i); handleModalClose(); }}>
+							<div className="media-viewer__modal-title"><h4>{i + 1}</h4></div>
+							<div style={{ display: "flex", alignItems: "center", height: 100, width: 100 }}>
+								<Thumbnail item={items[i]} />
+							</div>
+							{items[i].title ?
+								<div className="media-viewer__modal-title" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(items[i].title, { USE_PROFILES: { html: true } }) || "" }} />
+								: null
+							}
+						</animated.div>
+					)}
+				</div>
+			</div>
+			{/* Jump-to-Image Section - End */}
 
-  return (
-    <main ref={container} className={`media-viewer__container media-viewer__container-background--${theme}`}>
-
-      {isLoading ? <div><Spinner size={spinnerSize} /></div> :
-        <Fragment>
-          <div className="media-viewer__overlay" style={{ opacity: open ? 1 : 0, zIndex: open ? 9999 : -1 }}>
-            <header className='media-viewer__overlay-header'>
-              <h3 style={{ margin: 0, color: "#FFFFFF" }}>{galleryName}</h3>
-              <TiTimes fontSize={24} color={"#FFFFFF"} style={{ cursor: "pointer" }} onClick={() => toggle(!open)} />
-            </header>
-
-            <div className="media-viewer__overlay-thumbnail-container">
-              {trail.map(({ opacity, x }, i) =>
-                <animated.div key={i} className="media-viewer__overlay-thumbnail" style={{ opacity, x }} onClick={() => handleJumpToSlide(i)}>
-                  <div className="media-viewer__overlay-title"><h4>{i + 1}</h4></div>
-                  <div style={{ display: "flex", alignItems: "center", height: 100, width: 100 }}>
-                    {itemList[i].hasError ?
-                      <ThumbnailError /> :
-                      <img src={itemList[i].url} alt={itemList[i].title} draggable="false" style={{ maxHeight: 100, maxWidth: 100 }} />
-                    }
-                  </div>
-                  {itemList[i].title ?
-                    <div className="media-viewer__overlay-title" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(itemList[i].title, { USE_PROFILES: { html: true } }) || "" }} />
-                    : null
-                  }
-                </animated.div>
-              )}
-            </div>
-          </div>
-
-          <header className='media-viewer__header' onClick={() => toggle(!open)}>
-            {itemList.length === 0 ? "- / -" : (index + 1) + " / " + itemList.length}
-          </header>
-
-          {index === 0 || isMobile || hideControls ? null :
-            <button className="media-viewer__nav-button media-viewer__left-nav" disabled={index === 0} onClick={() => handleNavigation(index - 1)}>
-              <TiArrowLeftThick fontSize={24} color={"#FFFFFF"} />
-            </button>
-          }
-
-          {props.map(({ x, display, scale }, i) =>
-            <animated.div key={i} className="media-viewer__item" {...handleSwipeGesture()} style={{ display, x, scale }}>
-              {itemList[i].hasError ?
-                <LoadingError /> :
-                <Fragment>
-                  {itemList[i].type === 'video' ?
-                    <video controls style={{ maxHeight: height, maxWidth: width }}>
-                      <source src={itemList[i].url} type="video/mp4" />
-                    </video> :
-                    <img src={itemList[i].url} alt={itemList[i].title} draggable="false" onError={e => console.error(e)} loading="lazy" style={{ maxHeight: height, maxWidth: width }} />
-                  }
-                  {itemList[i].title ?
-                    <div className="media-viewer__title" style={titleStyles} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(itemList[i].title, { USE_PROFILES: { html: true } }) || "" }} />
-                    : null
-                  }
-                </Fragment>
-              }
-
-
-            </animated.div>
-          )}
-
-          {index === itemList.length - 1 || isMobile || hideControls ? null :
-            <button className="media-viewer__nav-button media-viewer__right-nav" disabled={index === itemList.length - 1} onClick={() => handleNavigation(index + 1)}>
-              <TiArrowRightThick fontSize={24} color={"#FFFFFF"} />
-            </button>
-          }
-        </Fragment>
-      }
-
-    </main>
-  )
+		</main >
+	)
 }
 
-export default MediaViewer;
-
+export default MediaViewer
