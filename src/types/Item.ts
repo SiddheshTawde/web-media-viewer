@@ -3,5 +3,4 @@ export default interface Item {
     url: string;
     thumbnailUrl?: string;
     type?: string;
-    hasError?: boolean
 };
