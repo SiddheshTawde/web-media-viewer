@@ -45,6 +45,8 @@ export default [
                     main: pkg.main,
                     module: pkg.module,
                     author: pkg.author,
+                    repository: pkg.repository,
+                    homepage: pkg.homepage,
                     license: pkg.license,
                     peerDependencies: pkg.peerDependencies,
                     types: pkg.types
