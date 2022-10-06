@@ -1,6 +1,6 @@
 {
   "name": "web-media-viewer",
-  "version": "0.0.1-pre.03",
+  "version": "1.0.0",
   "description": "A React based viewer, inspired from the React Spring View Pager Example for different types of web media.",
   "author": "Siddhesh Tawde - siddheshtawde35@gmail.com",
   "repository": {
@@ -22,6 +22,7 @@
   "module": "esm/index.js",
   "scripts": {
     "package:build": "rollup -c",
+    "package:bundle": "cd dist && npm pack",
     "storybook": "start-storybook",
     "build-storybook": "build-storybook"
   },

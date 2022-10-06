@@ -6,6 +6,10 @@
 		"type": "image"
 	},
 	{
+		"title": "<div><h3 style='margin: 0'>Elephant Dream</h3><p style='margin: 0'>The first Blender Open Movie from 2006</p></div>",
+		"url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+	},
+	{
 		"url": "https://youtu.be/linlz7-Pnvw",
 		"title": "Switzerland in 8K ULTRA HD HDR - Heaven of Earth (60 FPS)"
 	},

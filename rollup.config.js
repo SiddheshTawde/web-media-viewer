@@ -45,6 +45,7 @@ export default [
                     main: pkg.main,
                     module: pkg.module,
                     author: pkg.author,
+                    keywords: pkg.keywords,
                     repository: pkg.repository,
                     homepage: pkg.homepage,
                     license: pkg.license,

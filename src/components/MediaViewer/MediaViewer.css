@@ -49,6 +49,9 @@
 	cursor: default;
 	pointer-events: none;
 }
+.media-viewer__nav-button:active {
+	transform: scale(0.9);
+}
 
 .media-viewer__nav-button.media-viewer__left-nav {
 	left: 12px;
@@ -152,14 +155,14 @@
 
 .media-viewer__modal-container.fold-in {
 	transform: scaleY(.01) scaleX(0);
-	/* animation: unfoldIn 1s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards; */
-	animation: unfoldIn 1s ease forwards;
+	animation: unfoldIn 1s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards;
+	/* animation: unfoldIn 1s ease forwards; */
 }
 
 .media-viewer__modal-container.fold-out {
 	transform: scale(1);
-	/* animation: unfoldOut 1s .3s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards; */
-	animation: unfoldOut 1s .3s ease forwards;
+	animation: unfoldOut 1s .3s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards;
+	/* animation: unfoldOut 1s .3s ease forwards; */
 }
 
 @keyframes unfoldIn {

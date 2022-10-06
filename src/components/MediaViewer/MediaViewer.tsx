@@ -2,7 +2,7 @@ import React, { FunctionComponent, useRef, useState } from 'react'
 import useMeasure from "react-use-measure"
 import { useDrag } from "@use-gesture/react"
 import clamp from "lodash.clamp"
-import { useSprings, useTrail, animated } from "@react-spring/web"
+import { useSpring, useSprings, useTrail, animated } from "@react-spring/web"
 import { TiArrowLeftThick, TiArrowRightThick, TiTimes } from "react-icons/ti"
 
 // @ts-ignore - dompurify does not includes type definitions
