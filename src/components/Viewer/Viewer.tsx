@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react"
+import { Fragment, FunctionComponent, useState } from "react"
 import { useSprings } from "@react-spring/web"
 import useMesaure from "react-use-measure"
 import { useDrag } from "react-use-gesture"
@@ -7,8 +7,10 @@ import clamp from "lodash.clamp"
 import ViewerPorps from "../../types/ViewerProps"
 import Modal from "../Modal/Modal";
 import MediaComponent from "../MediaComponent/MediaComponent"
+import DeviceDetect from "../../utils/detect-device"
 
-const Viewer: FunctionComponent<ViewerPorps> = ({ items, galleryTitle }) => {
+const Viewer: FunctionComponent<ViewerPorps> = ({ items, galleryName }) => {
+	const isMobile = DeviceDetect();
 	const [containerRef, { height, width }] = useMesaure();
 
 	const [current, updateCurrent] = useState(0);
@@ -65,24 +67,29 @@ const Viewer: FunctionComponent<ViewerPorps> = ({ items, galleryTitle }) => {
 	};
 
 	return (
-		<main ref={containerRef} className="relative bg-white h-full w-full">
-			<button className="absolute top-4 left-4 text-sm bg-black/60 hover:bg-black/50 active:bg-black/70 text-gray-50 px-4 py-3 rounded cursor-pointer transition-colors z-10" onClick={() => toggle(true)}>{current + 1} / {items.length}</button>
+		<main ref={containerRef} className="media_viewer--main_container relative bg-white h-full w-full">
+			<button className="media_viewer--modal_trigger absolute top-4 left-4 text-sm bg-black/60 hover:bg-black/50 active:bg-black/70 text-gray-50 px-4 py-3 rounded cursor-pointer transition-colors z-10" onClick={() => toggle(true)}>{current + 1} / {items.length}</button>
 
-			<button onClick={() => handleNavigation(current - 1)} disabled={current <= 0} className="absolute top-0 bottom-0 left-4 m-auto bg-black/60 hover:bg-black/50 active:bg-black/70 disabled:bg-gray-300 text-gray-50 rounded p-3 w-fit h-fit transition-colors z-10">
-				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-					<path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
-				</svg>
-			</button>
+			{!isMobile ?
+				<Fragment>
+					<button onClick={() => handleNavigation(current - 1)} disabled={current <= 0} className="media_viewer--nav_prev absolute top-0 bottom-0 left-4 m-auto bg-black/60 hover:bg-black/50 active:bg-black/70 disabled:bg-gray-300/40 text-gray-50 disabled:text-gray-400 rounded p-3 w-fit h-fit transition-colors z-10">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+							<path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
+						</svg>
+					</button>
 
-			<button onClick={() => handleNavigation(current + 1)} disabled={current >= items.length - 1} className="absolute top-0 bottom-0 right-4 m-auto bg-black/60 hover:bg-black/50 active:bg-black/70 disabled:bg-gray-300 text-gray-50 rounded p-3 w-fit h-fit transition-colors z-10">
-				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-					<path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
-				</svg>
-			</button>
+					<button onClick={() => handleNavigation(current + 1)} disabled={current >= items.length - 1} className="media_viewer--nav_next absolute top-0 bottom-0 right-4 m-auto bg-black/60 hover:bg-black/50 active:bg-black/70 disabled:bg-gray-300/40 text-gray-50 disabled:text-gray-400 rounded p-3 w-fit h-fit transition-colors z-10">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+							<path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+						</svg>
+					</button>
+				</Fragment>
+				: null
+			}
 
-			<Modal items={items} height={height} width={width} open={open} toggle={toggle} galleryTitle={galleryTitle} handleJumpToNavigation={handleJumpToNavigation} />
+			<Modal items={items} height={height} width={width} open={open} toggle={toggle} galleryName={galleryName} handleJumpToNavigation={handleJumpToNavigation} />
 
-			<div className="relative flex items-center justify-center w-full h-full overflow-hidden">
+			<div className="media_viewer--media_container relative flex items-center justify-center w-full h-full overflow-hidden">
 				{props.map(({ display, scale, x }, index) =>
 					<MediaComponent key={`item-${index + 1}`} display={display} scale={scale} x={x} item={items[index]} gesture={gesture} height={height} width={width} />
 				)}

@@ -16,7 +16,7 @@ const MediaComponent: FunctionComponent<MediaComponentProps> = ({ display, scale
 
 	if (item.type === "image" || parsedItem.category === 'image') {
 		return (
-			<animated.div {...gesture()} style={{ display, scale, x, boxShadow: "0 62.5px 125px -25px rgba(50, 50, 73, 0.5), 0 37.5px 75px -37.5px rgba(0, 0, 0, 0.6)" }} className="absolute items-center justify-center h-fit w-fit select-none z-0">
+			<animated.div {...gesture()} style={{ display, scale, x, boxShadow: "0 62.5px 125px -25px rgba(50, 50, 73, 0.5), 0 37.5px 75px -37.5px rgba(0, 0, 0, 0.6)" }} className="absolute items-center justify-center h-fit w-fit select-none z-0 hover:cursor-grab active:cursor-grabbing">
 				{loading ?
 					<div className="bg-black/40 backdrop-blur-sm w-full h-full flex items-center justify-center absolute top-0 left-0 right-0 bottom-0 m-auto">
 						<Spinner />

@@ -21,19 +21,19 @@ export const Default = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Default.args = {
 	items: switzerland,
-	galleryTitle: "Switzerland's Best"
+	galleryName: "Switzerland's Best"
 };
 
 export const Video = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Video.args = {
 	items: videos,
-	galleryTitle: "Videos"
+	galleryName: "Videos"
 };
 
 export const PicSum = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 PicSum.args = {
 	items: picsum,
-	galleryTitle: "PicSum"
+	galleryName: "PicSum"
 };

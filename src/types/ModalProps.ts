@@ -7,6 +7,6 @@ export default interface ModalProps {
 	width: number;
 	open: boolean;
 	toggle: Dispatch<SetStateAction<boolean>>;
-	galleryTitle?: string;
+	galleryName?: string;
 	handleJumpToNavigation: (targetIndex: number) => void;
 }
