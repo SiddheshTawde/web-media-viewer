@@ -3,7 +3,7 @@
 <h4 align="center">A React based viewer, inspired from the <a href="https://codesandbox.io/s/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/viewpager" target="_blank">React Spring View Pager Example</a> for different types of web media.</h4>
 
 <div align="center">
-	<img src="https://raw.githubusercontent.com/SiddheshTawde/web-media-viewer/main/documentation/demo.gif" alt="Web Media Viewer Demo" />
+	<img src="https://dl.dropboxusercontent.com/s/7ppr1o1w4io322a/web-media-viewer-1.1.0.gif?dl=0" alt="Web Media Viewer Demo" width="960px" />
 </div>
 
 <br />
@@ -19,6 +19,10 @@ Web Media Viewer requires <a href="https://reactjs.org/">React</a>.
 
 npm install web-media-viewer
 
+# or
+
+yarn add web-media-viewer
+
 ```
 
 #### Basic Usage
@@ -33,18 +37,24 @@ const App: React.FunctionComponent = () => {
     <MediaViewer
       items={[
         {
-          url: 'https://images.pexels.com/photos/7932578/pexels-photo-7932578.jpeg',
-          title: 'Swiss valley'
+          url: "https://picsum.photos/id/12/2500/1667",
+          title: "Paul Jarvis",
+          type: "image" // required if the image link is not a direct link
         },
         {
-          url: 'https://images.pexels.com/photos/1461027/pexels-photo-1461027.jpeg',
-          title: 'Grassland'
+          url: "https://images.pexels.com/photos/2399391/pexels-photo-2399391.jpeg",
+          title: "<div><b>Photo of People Near Clock Tower During Daytime</b><p>Bern, BE, Switzerland</p><div>"
         },
         {
-          url: 'https://images.pexels.com/photos/1586298/pexels-photo-1586298.jpeg',
-          title: 'Frozen Lake'
-        }
+          url: "https://www.youtube.com/watch?v=linlz7-Pnvw", // Auto-embed Youtube/Vimeo links
+          title: "Switzerland in 8K ULTRA HD HDR - Heaven of Earth (60 FPS)"
+        },
+        {
+          url: "https://images.pexels.com/photos/1608966/pexels-photo-1608966.jpeg",
+          title: "<div><b>Green Trees</b><p>Lauterbrunnen, BE, Switzerland</p><div>"
+        },
       ]}
+      galleryName="Switzerland's Best"
     />
   );
 };
@@ -69,35 +79,19 @@ items prop requires an array of items with URL.<br />
 
   <tbody>
     <tr>
-      <td align="center" width="250px">items*</td>
-      <td align="center" width="250px">ItemProps[ ]</td>
-    </tr>
-    <tr>
-      <td align="center" width="250px">hideControls</td>
-      <td align="center" width="250px">boolean</td>
-    </tr>
-    <tr>
-      <td align="center" width="250px">titleStyles</td>
-      <td align="center" width="250px">CSS Properties</td>
-    </tr>
-    <tr>
-      <td align="center" width="250px">swipeDistance</td>
-      <td align="center" width="250px">number</td>
+      <td align="center" width="250px">items (required)</td>
+      <td align="center" width="250px">ItemProp[ ]</td>
     </tr>
     <tr>
       <td align="center" width="250px">galleryName</td>
       <td align="center" width="250px">string</td>
-    </tr>
-    <tr>
-      <td align="center" width="250px">spinnerSize</td>
-      <td align="center" width="250px">number</td>
     </tr>
   </tbody>
 </table>
 
 <br />
 
-<h4>ItemProps:</h4>
+<h4>ItemProp:</h4>
 Each item must contain a url key. Optionally, you can pass a title and/or thumbnail url.
 
 <table width="500px" border>
@@ -110,19 +104,19 @@ Each item must contain a url key. Optionally, you can pass a title and/or thumbn
 
   <tbody>
     <tr>
-      <td align="center" width="250px">url*</td>
+      <td align="center" width="250px">url (required)</td>
       <td align="center" width="250px">string</td>
     </tr>
     <tr>
       <td align="center" width="250px">title</td>
-      <td align="center" width="250px">string</td>
+      <td align="center" width="250px">string | HTML</td>
     </tr>
     <tr>
-      <td align="center" width="250px">thumbnailUrl</td>
+      <td align="center" width="250px">thumbnail</td>
       <td align="center">string</td>
     </tr>
     <tr>
-      <td align="center" width="250px">type</td>
+      <td align="center" width="250px">type <br/>(required if url is NOT a direct link)</td>
       <td align="center" width="250px">string</td>
     </tr>
   </tbody>

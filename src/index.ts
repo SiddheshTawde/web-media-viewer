@@ -1,1 +1,3 @@
-export { default } from './components/MediaViewer/MediaViewer'
+import "./index.css"
+
+export { default } from './components/Viewer/Viewer';
