@@ -11,7 +11,7 @@ import { terser } from "rollup-plugin-terser";
 // @ts-ignore - Types Package for rollup-plugin-peer-deps-external is not available
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
-import packageJson from "./package.json";
+import packageJson from "./package.json" assert {type: "json"};
 
 const config: RollupOptions[] = [
 	{
