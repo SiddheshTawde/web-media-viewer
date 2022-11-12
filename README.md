@@ -3,16 +3,12 @@
 <h4 align="center">A React based viewer, inspired from the <a href="https://codesandbox.io/s/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/viewpager" target="_blank">React Spring View Pager Example</a> for different types of web media.</h4>
 
 <div align="center">
-	<img src="https://dl.dropboxusercontent.com/s/7ppr1o1w4io322a/web-media-viewer-1.1.0.gif?dl=0" alt="Web Media Viewer Demo" width="960px" />
+  <img src="https://raw.githubusercontent.com/SiddheshTawde/web-media-viewer/main/public/web-media-viewer-1.1.1-demo.gif" alt="Web Media Viewer Demo" width="720px" />
 </div>
-
-<br />
-
----
 
 ## Getting Started
 
-Web Media Viewer requires <a href="https://reactjs.org/">React</a>.
+Web Media Viewer requires [React](https://reactjs.org/).
 
 #### Installation
 ```bash
@@ -27,12 +23,12 @@ yarn add web-media-viewer
 
 #### Basic Usage
 
-```tsx
+```jsx
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import MediaViewer from 'web-media-viewer';
 
-const App: React.FunctionComponent = () => {
+const App = () => {
   return (
     <MediaViewer
       items={[
@@ -127,4 +123,5 @@ Each item must contain a url key. Optionally, you can pass a title and/or thumbn
 ---
 
 ### License
-MIT
+
+[MIT](https://github.com/SiddheshTawde/web-media-viewer/blob/main/LICENCE)

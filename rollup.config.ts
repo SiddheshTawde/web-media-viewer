@@ -1,4 +1,4 @@
-import rollup from "rollup";
+import { RollupOptions } from "rollup";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
@@ -11,9 +11,9 @@ import { terser } from "rollup-plugin-terser";
 // @ts-ignore - Types Package for rollup-plugin-peer-deps-external is not available
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
-import packageJson from "./package.json" assert {type: "json"};
+import packageJson from "./package.json";
 
-const config: rollup.RollupOptions[] = [
+const config: RollupOptions[] = [
 	{
 		input: "src/index.ts",
 		output: [
@@ -66,4 +66,4 @@ const config: rollup.RollupOptions[] = [
 	},
 ];
 
-export default config
+export default config;
