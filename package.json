@@ -1,6 +1,6 @@
 {
   "name": "web-media-viewer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A React based viewer, inspired from the React Spring View Pager Example for different types of web media.",
   "author": "Siddhesh Tawde - siddheshtawde35@gmail.com",
   "repository": {
