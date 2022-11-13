@@ -1,4 +1,3 @@
-import { RollupOptions } from "rollup";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
@@ -11,9 +10,12 @@ import { terser } from "rollup-plugin-terser";
 // @ts-ignore - Types Package for rollup-plugin-peer-deps-external is not available
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
-import packageJson from "./package.json" assert {type: "json"};
+const packageJson = require("./package.json");
 
-const config: RollupOptions[] = [
+/**
+ * @type {import("rollup").RollupOptions[]}
+*/
+const config = [
 	{
 		input: "src/index.ts",
 		output: [
@@ -21,7 +23,7 @@ const config: RollupOptions[] = [
 				file: "dist/" + packageJson.main,
 				format: "cjs",
 				sourcemap: true,
-				exports: "default"
+				exports: "default",
 			},
 			{
 				file: "dist/" + packageJson.module,
@@ -59,9 +61,9 @@ const config: RollupOptions[] = [
 		external: ['react', 'react-dom']
 	},
 	{
-		input: "dist/esm/src/index.d.ts",
+		input: "dist/esm/index.d.ts",
 		output: [{ file: "dist/" + packageJson.types, format: "esm", exports: "default" }],
-		plugins: [resolve(), dts()],
+		plugins: [resolve(), dts.default()],
 		external: [/\.css$/]
 	},
 ];
