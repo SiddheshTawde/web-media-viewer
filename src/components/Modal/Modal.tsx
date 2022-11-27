@@ -2,6 +2,7 @@ import { FunctionComponent } from "react";
 import useMeasure from "react-use-measure"
 import { animated, useTransition } from "@react-spring/web"
 import DOMPurify from "dompurify";
+import PlaceholderThumbnail from './PlaceholderThumbnail'
 
 import ModalProps from "../../types/ModalProps";
 
@@ -38,7 +39,10 @@ const Modal: FunctionComponent<ModalProps> = ({ open, toggle, height, width, gal
 						<button className="media_viewer--thumbnail_item flex items-center w-full text-white my-4" onClick={() => handleJumpToNavigation(index)}>
 							<div className="media_viewer--thumbnail_count px-2 w-12">{index + 1}</div>
 							<div className="media_viewer--thumbnail h-24 w-24 flex items-center justify-center">
-								<img src={item.thumbnail || item.url} className="max-h-24 max-w-24" />
+								{item.thumbnail ?
+									<img src={item.thumbnail} className="max-h-24 max-w-24" />
+									: <PlaceholderThumbnail />
+								}
 							</div>
 							<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.title || "") }} className="media_viewer--thumbnail_title px-4 text-left" />
 						</button>
